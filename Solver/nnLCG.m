@@ -128,9 +128,9 @@ for iter = 1 : maxIter
     g0 = g;
 	
 	%TODO: need to "think" of a "better" stopping criteria ;-)
-	if  (abs((f1-f0)/f0) < tol) 
-		break;
-	end
+	%if  (abs((f1-f0)/f0) < tol) 
+	%	break;
+	%end
 
 end
 

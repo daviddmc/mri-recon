@@ -23,7 +23,6 @@ classdef Sum < Operator
     methods(Access = protected)
         y = apply_(op, varargin)
         varargout = gradOp_(op, preGrad)
-        y = JacOp_(op, varargin)
     end
     
 

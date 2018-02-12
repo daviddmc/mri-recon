@@ -23,13 +23,13 @@ classdef Functional < Operator
         z = prox(fun, lambda, x, H)
         varargout = grad(fun, varargin)
         z = proxConj(fun, lambda, x)
-        y = JacOp(fun, varargin)
+        %y = JacOp(fun, varargin)
         p = isProx(op)
     end
     
     methods(Access = protected)
         updateProp(fun, isProx, isGrad, L)
-        y = JacOp_(fun, varargin)
+        %y = JacOp_(fun, varargin)
         f = apply_( fun, varargin )
     end
     

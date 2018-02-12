@@ -40,7 +40,11 @@ switch solver.param.stopCriteria
     case 'RESIDUAL'
         %
     case 'GRAD'
-        % 
+        normG = norm(state.grad, inf);
+        if nomrG < solver.param.tol
+            isStop = 1;
+        end
+        convergenceInfo = {'|grad|_inf', normG};
     case 'MAX_ITERATION'
         % do nothing
         convergenceInfo = {};

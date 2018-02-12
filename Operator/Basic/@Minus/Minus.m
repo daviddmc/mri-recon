@@ -18,7 +18,6 @@ classdef Minus < Operator
     methods(Access = protected)
         y = apply_(op, a, b, isCache)
         [ga, gb] = gradOp_(op, preGrad)
-        y = JacOp_(op, varargin)
     end
     
 

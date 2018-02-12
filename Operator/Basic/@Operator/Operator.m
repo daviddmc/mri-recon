@@ -46,7 +46,6 @@ classdef Operator < matlab.mixin.Copyable
         
         y = apply(op, varargin)
         g = gradOp(op, y, varargin);
-        y = JacOp(op, varargin);
         setInput(op, num, newInput)
         
         p = L(op)
@@ -69,7 +68,6 @@ classdef Operator < matlab.mixin.Copyable
     methods(Access = protected, Abstract)
         y = apply_(op, varargin)
         g = gradOp_(op, preGrad)
-        y = JacOp_(op, varargin)
         updateProp(op)
     end
     
