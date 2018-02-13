@@ -3,7 +3,7 @@
 % (c) Frank Ong 2015
 %
 clc
-clear
+clear all
 close all
 %setPath
 
@@ -57,21 +57,29 @@ drawnow
 FOVl = [FOV,levels];
 level_dim = length(FOV) + 1;
 
-S = ReduceSum([], 0, level_dim, levels, false);
+S = ReduceSum('1', 0, level_dim, levels, false);
 blockNuclearNorms = cell(1, levels);
 for l = 1:levels
-    blockNuclearNorms{l} = BlockNuclearNorm([], lambdas(l), block_sizes(l,:));
+    blockNuclearNorms{l} = BlockNuclearNorm('2', lambdas(l), block_sizes(l,:));
 end
-sumBlockNuclearNorms = SeparableSum([], 1, blockNuclearNorms);
+sumBlockNuclearNorms = SeparableSum(blockNuclearNorms, 1);
 DC = LinearEquation({S, X});
 
-param.maxIter = nIter * 10; 
+param.maxIter = nIter; 
 param.verbose = 2;
 param.rho0 = 10;
 param.tol = 1e-3;
 
-fbpd = FBPD(DC, sumBlockNuclearNorms, [], []);
-[X_it, info] = fbpd.run(zeros(FOVl), param);
+%fbpd = FBPD(DC, sumBlockNuclearNorms, [], []);
+%[X_it, info] = fbpd.run(zeros(FOVl), param);
+eq1.lhs = {'1'};
+eq1.rhs = {'2'};
+alm = ALM({DC, sumBlockNuclearNorms}, {eq1});
+param.mu = 10;
+param.beta = 1.02;
+param.stopCriteria = 'MAX_ITERATION';
+[X_it, info] = alm.run({zeros(FOVl), zeros(FOVl)}, param);
+X_it = X_it{1};
 
 %[X_it, info ] = ADMM(DC, sumBlockNuclearNorms, [], zeros(FOVl), param );
 %% Show Result

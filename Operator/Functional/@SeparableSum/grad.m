@@ -1,6 +1,5 @@
-function g = gradOp_( ss, preGrad )
+function g = grad( ss, x )
 
-x = ss.cache;
 
 g = zeros(size(x));
 ndimX = ndims(x);
@@ -10,11 +9,13 @@ prefix(:) = {':'};
 
 for ii = 1 : nLast
     if isempty(prefix)
-        g(ii) = ss.funList{ii}.grad(x(ii)) * preGrad;
+        g(ii) = ss.inputList{ii}.grad(x(ii));
     else
-        g(prefix{:}, ii) = ss.funList{ii}.grad(x(prefix{:}, ii)) * preGrad;
+        g(prefix{:}, ii) = ss.inputList{ii}.grad(x(prefix{:}, ii));
     end
 end
+
+g = g * ss.mu;
 
 
 end
