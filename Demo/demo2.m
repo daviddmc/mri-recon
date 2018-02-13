@@ -5,11 +5,11 @@ load brain512.mat
 
 ft = FourierTransformation([], 0, [1 2]);
 E = Undersampling(ft, 0, mask, 0);
-%M = Mask(mask, false);
-%E = M * ft;
 
+
+%data = data * 10;
 im_dc = E.adjoint(data .* mask ./ pdf);
-data = data.*mask/max(abs(im_dc(:)));
+data = data.*mask/ max(abs(im_dc(:)));
 im_dc = im_dc/max(abs(im_dc(:)));
 
 wt = WaveletTransformation([], 0, 'Daubechies',4,4);
@@ -24,9 +24,13 @@ tv = TotalVariation([], 0.005, [1, 2], 'anisotropic', option);
 
 x0 = im_dc;
 
-param.maxIter = 50;
+param.maxIter = 20;
 param.verbose = 2;
+param.tol = 1e-3;
 
-[ x, info] = FBPD( tv, l1norm, wt, ssd, x0, param );
-%[ x, info ] = FBFPD( tv, l1norm, wt, ssd, x0, param );
+fbpd = FBPD(tv, l1norm, wt, ssd);
+[x, info] = fbpd.run(x0, param);
+
+
+imshow(abs(x),[]);
 

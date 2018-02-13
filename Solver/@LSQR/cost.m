@@ -1,6 +1,6 @@
 function c = cost( lq, state )
 
-c = state.normr;
+c = 0.5 * state.normr ^ 2;
 
 end
 

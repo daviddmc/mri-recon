@@ -65,12 +65,15 @@ end
 sumBlockNuclearNorms = SeparableSum([], 1, blockNuclearNorms);
 DC = LinearEquation({S, X});
 
-param.maxIter = nIter;
+param.maxIter = nIter * 10; 
 param.verbose = 2;
 param.rho0 = 10;
 param.tol = 1e-3;
 
-[X_it, info ] = ADMM(DC, sumBlockNuclearNorms, [], zeros(FOVl), param );
+fbpd = FBPD(DC, sumBlockNuclearNorms, [], []);
+[X_it, info] = fbpd.run(zeros(FOVl), param);
+
+%[X_it, info ] = ADMM(DC, sumBlockNuclearNorms, [], zeros(FOVl), param );
 %% Show Result
 
 figure,imshow3(abs(X_it),[],[1,levels]),title('Multi-scale Low Rank Decomposition','FontSize',14);

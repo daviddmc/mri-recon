@@ -25,6 +25,7 @@ classdef Solver < matlab.mixin.Copyable
     
     methods(Access = protected)
         [isStop, info] = testConvergence(solver, x);
+        [isStop, convergenceInfo] = testConvergenceResidual( solver, state )
     end
     
     methods(Access = protected, Abstract)

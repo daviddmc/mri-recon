@@ -1,4 +1,4 @@
-function [isStop, convergenceInfo] = testConvergence( solver, state )
+function [isStop, convergenceInfo] = testConvergenceResidual( solver, state )
 
 isStop = 0;
 NarDivNaNr = state.normar / (state.norma * state.normr);

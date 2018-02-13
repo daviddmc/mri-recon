@@ -1,9 +1,8 @@
 function parseParam_(lq, param)
 
-if isfield(param, 'stopCriteria') && ~strcmp(param.stopCriteria, 'RESIDUAL')
-    warning(' ');
+if ~isfield(param, 'stopCriteria')
+    lq.param.stropCriteria = 'RESIDUAL';
 end
-lq.param.stropCriteria = 'RESIDUAL';
 
 if ~isfield(param, 'tol')
     lq.param.tol = 1e-6;

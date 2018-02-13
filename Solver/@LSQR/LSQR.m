@@ -26,7 +26,7 @@ classdef LSQR < Solver
         val = cost(solver, x);
         x= initalize(solver, x);
         x = finalize(solver, x);
-        [isStop, convergenceInfo] = testConvergence( solver, state )
+        [isStop, convergenceInfo] = testConvergenceResidual( solver, state )
     end
 
    
