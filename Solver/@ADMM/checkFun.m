@@ -1,22 +1,18 @@
-function checkFun(fbpd)
+function checkFun(admm)
 
-if ~fbpd.f.isProx
+if ~admm.f.isProx
     error(' ');
 end
 
-if ~fbpd.g.isProx
+if ~admm.g.isProx
     error(' ');
 end
 
-if ~fbpd.h.isGrad
+if ~isempty(admm.B) && ~admm.B.isLinear
     error(' ');
 end
 
-if ~fbpd.A.isLinear
-    error(' ');
-end
-
-if length(fbpd.f.varList) ~= 1 || length(fbpd.g.varList) ~= 1 || length(fbpd.h.varList) ~= 1
+if length(admm.f.varList) ~= 1 || length(admm.g.varList) ~= 1
     error(' ');
 end
 

@@ -1,68 +1,85 @@
-function state = update( fbpd, state )
+function state = update( admm, state )
 
-x0 = state.var;
-v0 = state.varDual; 
-grad0 = state.grad;
+p = state.varDual;
+Bv = state.Bv;
+tau = state.tau;
+gamma = state.gamma;
 
-if state.useA
-    Ax0 = state.Ax;
-    Atv0 = state.Atv;
+u = admm.f.prox(1/tau, Bv - p);
+ur = gamma * u + (1 - gamma) * Bv;
+if state.useB
+    state.var = admm.g.prox(1/tau, ur + p, admm.B);
+    state.Bv = admm.B.apply(state.var);
 else
-    Ax0 = x0;
-    Atv0 = v0;
+    state.var = admm.g.prox(1/tau, ur + p, []);
+    state.Bv = state.var;
 end
-
-if state.isPDHG
-    x = fbpd.f.prox(state.tau, x0 - state.tau * Atv0);
-    grad = 0;
-else
-    x = fbpd.f.prox(state.tau, x0 - state.tau * (grad0 + Atv0));
-    grad = fbpd.h.grad(x);
-end
-
-if state.useA
-    Ax = fbpd.A.apply(x);
-    v = fbpd.g.proxConj(state.sigma, v0 + state.sigma * (2 * Ax - Ax0));
-    Atv = fbpd.A.adjoint(v);
-else
-    v = fbpd.g.proxConj(state.sigma, v0 + state.sigma * (2 * x - x0));
-end
+    
+state.varDual = p + ur - state.Bv;
 
 if state.useRes
-    if state.useA
-        state.primalRes = 1/state.tau * (x0 - x) - (Atv0 - Atv);
-        state.dualRes = 1/state.sigma * (v0 - v) - (Ax0 - Ax);
-    else
-        dx = (x0 - x);
-        dv = (v0 - v);
-        state.primalRes = 1/state.tau * dx - dv;
-        state.dualRes = 1/state.sigma * dv - dx;
-    end
-    
-    if state.isPDHG
-        state.primalRes = norm(state.primalRes(:));
-        state.dualRes = norm(state.dualRes(:));
-        if state.primalRes / state.dualRes < fbpd.param.delta1
-            state.tau = state.tau * (1 - state.alpha);
-            state.sigma = state.sigma / (1 - state.alpha);
-            state.alpha = state.alpha * fbpd.param.eta;
-        elseif state.primalRes / state.dualRes > fbpd.param.delta2
-            state.tau = state.tau / (1 - state.alpha);
-            state.sigma = state.sigma * (1 - state.alpha);
-            state.alpha = state.alpha * fbpd.param.eta;
-        end
-    else
-        state.primalRes = state.primalRes - (grad0 - grad);
-    end
+    state.d = norm(state.Bv(:) - Bv(:)) / norm(state.varDual(:));
+    state.r = norm(u(:) - state.Bv(:)) / max(norm(u(:)), norm(state.Bv(:)));
 end
 
-state.var = x;
-state.varDual = v;
-if state.useA
-    state.Ax = Ax;
-    state.Atv = Atv;
+if mod(state.iter, state.updateInterval) == 1
+    lambdah = tau * (p + u - Bv);
+    dL =  lambdah - state.adaptive.lambdah;
+    dh = state.adaptive.u - u;
+    dLdL = dL(:)' * dL(:);
+    dhdL = dh(:)' * dL(:);
+    dhdh = dh(:)' * dh(:);
+    alphaSD = dLdL / dhdL;
+    alphaMG = dhdL / dhdh;
+    if 2 * alphaMG > alphaSD
+        alpha = alphaMG;
+    else
+        alpha = alphaSD - alphaMG / 2;
+    end
+    
+    lambda = tau * state.varDual;
+    dl = lambda - state.adaptive.lambda;
+    dg = state.Bv - state.adpative.Bv;
+    dldl = dl(:)' * dl(:);
+    dgdl = dg(:)' * dl(:);
+    dgdg = dg(:)' * dg(:);
+    betaMG = dldl / dgdl;
+    betaSD = dgdl / dgdg;
+    if 2 * betaMG > betaSD
+        beta = betaMG;
+    else
+        beta = betaSD - betaMG / 2;
+    end
+    
+    alphaCor = dhdL / sqrt(dhdh * dLdL);
+    betaCor = dgdl / sqrt(dgdg * dldl);
+    
+    if alphaCor > admm.param.epsilon
+        if betaCor > admm.param.epsilon
+            state.tau = sqrt(alpha * beta);
+            state.gamma = 1 + 2*state.tau / (alpha + beta);
+        else
+            state.tau = alpha;
+            state.gamma = 1.9;
+        end
+        state.varDual = state.varDual * (tau / state.tau);
+        % state.tau = min(state.tau, (1+Ccg/state.iter^2) * tau);
+        % state.gamma = min(state.gamma, (1+Ccg/state.iter^2));
+    elseif betaCor > admm.param.epsilon
+        state.tau = beta;
+        state.gamma = 1.1;
+        state.varDual = state.varDual * (tau / state.tau);
+    else
+        state.gamma = 1.5;
+    end
+
+    state.adaptive.lambdah = lambdah;
+    state.adaptive.u = u;
+    state.adaptive.lambda = lambda;
+    state.adaptive.Bv = state.Bv;
 end
-state.grad = grad;
+
+
 
 end
 

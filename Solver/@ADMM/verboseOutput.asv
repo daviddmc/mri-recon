@@ -1,0 +1,12 @@
+function verboseOutput(admm, state)
+
+if isempty(admm.costf)
+    c = cost( admm, state );
+else
+    c = admm.costf + admm.costg;
+end
+
+fprintf('f(x) = %f, g(x) = %f, total cost = %f\n', admm.costf, admm.costf, c);
+
+end
+

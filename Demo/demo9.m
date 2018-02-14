@@ -72,14 +72,20 @@ param.tol = 1e-3;
 
 %fbpd = FBPD(DC, sumBlockNuclearNorms, [], []);
 %[X_it, info] = fbpd.run(zeros(FOVl), param);
-eq1.lhs = {'1'};
-eq1.rhs = {'2'};
-alm = ALM({DC, sumBlockNuclearNorms}, {eq1});
-param.mu = 10;
-param.beta = 1.02;
-param.stopCriteria = 'MAX_ITERATION';
-[X_it, info] = alm.run({zeros(FOVl), zeros(FOVl)}, param);
-X_it = X_it{1};
+
+%eq1.lhs = {'1'};
+%eq1.rhs = {'2'};
+%alm = ALM({DC, sumBlockNuclearNorms}, {eq1});
+%param.mu = 10;
+%param.beta = 1;
+%param.stopCriteria = 'MAX_ITERATION';
+%[X_it, info] = alm.run({zeros(FOVl), zeros(FOVl)}, param);
+%X_it = X_it{1};
+
+param.updateInterval = 2;
+%admm = ADMM(DC, [], sumBlockNuclearNorms);
+admm = ADMM(sumBlockNuclearNorms, [] ,DC);
+[X_it, info] = admm.run(zeros(FOVl), param);
 
 %[X_it, info ] = ADMM(DC, sumBlockNuclearNorms, [], zeros(FOVl), param );
 %% Show Result

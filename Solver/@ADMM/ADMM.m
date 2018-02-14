@@ -7,32 +7,23 @@ classdef ADMM < Solver
     
     properties(SetAccess = protected)
         f
+        B
         g
-        A
-        h
     end
     
     methods
         % constructor
-        function fbpd = FBPD(f, g, A, h)
-            fbpd = fbpd@Solver('Forward Backward Primal Dual');
-            fbpd.f = f;
-            fbpd.g = g;
+        function admm = ADMM(f, B, g)
+            admm = admm@Solver('Alternating Direction Method of Multipliers');
+            admm.f = f;
+            admm.g = g;
             
-            if isempty(A)
-                fbpd.param.useA = 0;
-                fbpd.A = Identity([]);
+            if isempty(B)
+                admm.param.useB = 0;
+               % admm.B = Identity([]);
             else
-                fbpd.param.useA = 1;
-                fbpd.A = A;
-            end
-            
-            if isempty(h)
-                fbpd.param.isPDHG = 1;
-                fbpd.h = ZeroFunction([]);
-            else
-                fbpd.param.isPDHG = 0;
-                fbpd.h = h;
+                admm.param.useB = 1;
+                admm.B = B;
             end
             
         end

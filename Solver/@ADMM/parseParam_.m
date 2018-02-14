@@ -1,74 +1,34 @@
-function parseParam_(fbpd, param)
+function parseParam_(admm, param)
+
+%param.isExact;
 
 if ~isfield(param, 'stopCriteria')
-    fbpd.param.stopCriteria = 'RESIDUAL';
+    admm.param.stopCriteria = 'RESIDUAL';
 end
 
-if fbpd.param.isPDHG
-    
-    if ~isfield(param, 'tau')
-        if(fbpd.param.useA && fbpd.A.L)
-            fbpd.param.tau = 0.95 * sqrt(1 / fbpd.A.L);
-        else
-            fbpd.param.tau = 0.95;
-        end
-    else
-        fbpd.param.tau = param.tau;
-    end
-
-    if ~isfield(param, 'sigma')
-        fbpd.param.sigma = fbpd.param.tau;
-    else
-        fbpd.param.sigma = param.sigma;
-    end
-    
-    if ~isfield(param, 'delta1')
-        fbpd.param.delta1 = 2/3;
-    else
-        fbpd.param.delta1 = param.delta1;
-    end
-
-    if ~isfield(param, 'delta2')
-        fbpd.param.delta2 = 3/2;
-    else
-        fbpd.param.delta2 = param.delta2;
-    end
-
-    if ~isfield(param, 'eta')
-        fbpd.param.eta = 0.95;
-    else
-        fbpd.param.eta = param.eta;
-    end
-
-    if ~isfield(param, 'alpha')
-        fbpd.param.alpha = 0.5;
-    else
-        fbpd.param.alpha = param.alpha;
-    end
+if ~isfield(param, 'tau')
+    admm.param.tau = 1;
 else
-    if ~isfield(param, 'tau')
-        if(fbpd.h.L)
-            fbpd.param.tau = 1 / fbpd.h.L;
-        else
-            fbpd.param.tau = 1;
-        end
-    else
-        fbpd.param.tau = param.tau;
-    end
-
-    if ~isfield(param, 'sigma')
-        if(fbpd.param.useA && fbpd.A.L)
-            fbpd.param.sigma = 1 / (2 * fbpd.param.tau * fbpd.A.L);
-        else
-            fbpd.param.sigma = 1 / (2 * fbpd.param.tau);
-        end
-    else
-        fbpd.param.sigma = param.sigma;
-    end
+    admm.param.tau = param.tau;
 end
 
+if ~isfield(param, 'epsilon')
+    admm.param.epsilon = 0.2;
+else
+    admm.param.epsilon = param.epsilon;
+end
 
+if ~isfield(param, 'gamma')
+    admm.param.gamma = 1;
+else
+    admm.param.gamma = param.gamma;
+end
 
+if ~isfield(param, 'updateInterval')
+    admm.param.updateInterval = 2;
+else
+    admm.param.updateInterval = param.updateInterval;
+end
 
 end
 

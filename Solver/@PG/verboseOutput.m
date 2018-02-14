@@ -6,9 +6,10 @@ if isempty(pg.costf)
 else
     costf = pg.costf;
     costg = pg.costg;
-    pg.costf = [];
-    pg.costg = [];
 end
+
+pg.costf = [];
+pg.costg = [];
 
 fprintf('f(x) = %f, g(x) = %f, total cost = %f\n', costf, costg, costf + costg);
 

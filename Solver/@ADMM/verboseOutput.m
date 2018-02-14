@@ -1,19 +1,16 @@
-function verboseOutput(fbpd, state)
+function verboseOutput(admm, state)
 
-if isempty(fbpd.costf)
-    costf = fbpd.f.eval(state.var);
-    costg = fbpd.g.eval(fbpd.A.apply(state.var));
-    costh = fbpd.h.eval(state.var);
+if isempty(admm.costf)
+    c = cost( admm, state );
 else
-    costf = fbpd.costf;
-    costg = fbpd.costg;
-    costh = fbpd.costh;
-    fbpd.costf = [];
-    fbpd.costg = [];
-    fbpd.costh = [];
+    c = admm.costf + admm.costg;
 end
 
-fprintf('f(x) = %f, g(x) = %f, h(x) = %f, total cost = %f\n', costf, costg, costh, costf + costg + costh);
+admm.costf = [];
+admm.costg = [];
+
+fprintf('f(x) = %f, g(x) = %f, total cost = %f | tau = %f, gamma = %f\n',...
+    admm.costf, admm.costf, c, state.tau, state.gamma);
 
 end
 

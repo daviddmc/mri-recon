@@ -13,6 +13,7 @@ param = solver.param;
 state.var = x0;
 state.varDual = [];
 state.cost = [];
+state.iter = 0;
 state = solver.initialize(state);
 useCost = param.verbose > 1 || solver.saveInfo || strcmpi(param.stopCriteria, 'COST_UPDATE');
 if useCost && isempty(state.cost)

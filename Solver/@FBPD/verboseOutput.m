@@ -8,10 +8,11 @@ else
     costf = fbpd.costf;
     costg = fbpd.costg;
     costh = fbpd.costh;
-    fbpd.costf = [];
-    fbpd.costg = [];
-    fbpd.costh = [];
 end
+
+fbpd.costf = [];
+fbpd.costg = [];
+fbpd.costh = [];
 
 fprintf('f(x) = %f, g(x) = %f, h(x) = %f, total cost = %f\n', costf, costg, costh, costf + costg + costh);
 

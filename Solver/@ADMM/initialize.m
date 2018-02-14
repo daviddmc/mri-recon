@@ -1,29 +1,28 @@
-function state = initialize( fbpd, state)
+function state = initialize( admm, state)
 
-if fbpd.A.shape == 0
-    state.unitary = sqrt(fbpd.A.unitary);
+state.tau = admm.param.tau;
+state.gamma = admm.param.gamma;
+state.useB = admm.param.useB;
+state.useRes = strcmpi(admm.param.stopCriteria, 'RESIDUAL');
+state.updateInterval = admm.param.updateInterval;
+
+if state.useB
+    state.Bv = admm.B.apply(state.var);
 else
-    state.unitary = 0;
+    state.Bv = state.var;
 end
 
-state.tau = fbpd.param.tau;
-state.sigma = fbpd.param.sigma;
-state.useA = fbpd.param.useA;
-state.isPDHG = fbpd.param.isPDHG;
-state.useRes = strcmpi(fbpd.param.stopCriteria, 'RESIDUAL');
+state.varDual = 0 * state.Bv;
 
-if state.isPDHG
-    state.grad = 0;
+if state.updateInterval && isfinite(state.updateInterval)
+    state.adaptive.lambda = state.varDual;
+    state.adaptive.lambdah = state.varDual;
+    state.adpative.Bv = state.Bv;
+    state.adaptive.u = state.Bv;
 else
-    state.grad = fbpd.h.grad(state.var);
+    state.updateInterval = inf;
 end
 
-if state.useA
-    state.varDual = fbpd.A.apply(state.var);
-    state.Ax = state.varDual;
-    state.Atv = fbpd.A.adjoint(state.varDual);
-else
-    state.varDual = state.var;
-end
+
     
 end
