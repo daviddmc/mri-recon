@@ -41,7 +41,7 @@ switch solver.param.stopCriteria
         [isStop, convergenceInfo] = solver.testConvergenceResidual( state );
     case 'GRAD'
         normG = norm(state.grad, inf);
-        if nomrG < solver.param.tol
+        if normG < solver.param.tol
             isStop = 1;
         end
         convergenceInfo = {'|grad|_inf', normG};

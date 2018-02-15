@@ -27,7 +27,7 @@ if mod(state.iter, state.updateInterval) == 1
     dL =  lambdah - state.adaptive.lambdah;
     dh = state.adaptive.u - u;
     dLdL = dL(:)' * dL(:);
-    dhdL = dh(:)' * dL(:);
+    dhdL = real(dh(:)' * dL(:));
     dhdh = dh(:)' * dh(:);
     alphaSD = dLdL / dhdL;
     alphaMG = dhdL / dhdh;
@@ -41,7 +41,7 @@ if mod(state.iter, state.updateInterval) == 1
     dl = lambda - state.adaptive.lambda;
     dg = state.Bv - state.adpative.Bv;
     dldl = dl(:)' * dl(:);
-    dgdl = dg(:)' * dl(:);
+    dgdl = real(dg(:)' * dl(:));
     dgdg = dg(:)' * dg(:);
     betaMG = dldl / dgdl;
     betaSD = dgdl / dgdg;

@@ -15,9 +15,13 @@ classdef Reshape < LinearOperator
             rs.sizeOut = sizeOut;
         end
         
+        
+        
+    end
+    
+    methods(Access = protected)
         y = apply_(rs, x, isCache)
         y = pinv_(rs, x)
-        
     end
     
 end

@@ -39,7 +39,7 @@ if nargout > 0
                     res = x(:,:,t) .* nuft.smap(:,:,c);
                     y(:,:,c,t) = reshape(...
                         nufft(res, nuft.nufft_obj{t}) / fac, ...
-                        nufft.sizeK) .* nuft.dcf(:,:,t);
+                        nuft.sizeK) .* nuft.dcf(:,:,t);
                 end
             end
         end

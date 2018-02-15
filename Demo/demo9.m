@@ -82,7 +82,9 @@ param.tol = 1e-3;
 %[X_it, info] = alm.run({zeros(FOVl), zeros(FOVl)}, param);
 %X_it = X_it{1};
 
-param.updateInterval = 2;
+param.updateInterval = 3;
+param.tau = 50;
+param.gamma = 1.5;
 %admm = ADMM(DC, [], sumBlockNuclearNorms);
 admm = ADMM(sumBlockNuclearNorms, [] ,DC);
 [X_it, info] = admm.run(zeros(FOVl), param);

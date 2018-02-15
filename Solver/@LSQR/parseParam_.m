@@ -1,7 +1,7 @@
 function parseParam_(lq, param)
 
 if ~isfield(param, 'stopCriteria')
-    lq.param.stropCriteria = 'RESIDUAL';
+    lq.param.stopCriteria = 'RESIDUAL';
 end
 
 if ~isfield(param, 'tol')

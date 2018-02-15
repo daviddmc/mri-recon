@@ -1,16 +1,20 @@
 classdef SensitivityMap < LinearOperator
     
-    properties(SetAccess = protected)
+    properties
         map
     end
     
     methods
-        function sm = SensitivityMap(inputList, isAdjoint, map)
-            linprop.unitary = 1;
+        function sm = SensitivityMap(inputList, isAdjoint, map, isNormalized)
+            linprop.unitary = isNormalized;
             linprop.shape = -1;
             sm = sm@LinearOperator(linprop, isAdjoint, inputList);
             % Should the map be normalized???
-            sm.map = map ./ sqrt(sum(abs(map).^2, ndims(map)));
+            if isNormalized
+                sm.map = map ./ sqrt(sum(abs(map).^2, ndims(map)));
+            else
+                sm.map = map;
+            end
         end
     end
     
