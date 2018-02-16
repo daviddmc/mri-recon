@@ -1,4 +1,5 @@
 function [x, info] = run(solver, x0, param)
+%RUN run optimization algorithm
 
 if nargout > 1
     solver.saveInfo = true;

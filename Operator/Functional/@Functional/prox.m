@@ -31,7 +31,7 @@ end
 len = length(op.topoSort);
 cacheOutput = cell(1, len);
 
-if c && s >= 0 
+if c && (s >= 0 || ~op.proxOption.method) 
 
     cacheOutput = A(cacheOutput, len, op);
     tmp = op.prox_(lambda * op.mu * c, cacheOutput{refidx});
@@ -53,6 +53,7 @@ else
     switch op.proxOption.method
         case 1 %ADMM
             for iter = 1 : op.proxOption.maxIter
+                error(' ');
             end
         case 2 %POCS
             for iter = 1 : op.proxOption.maxIter

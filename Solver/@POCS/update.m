@@ -1,9 +1,9 @@
-function state = update( pg, state )
+function state = update( pocs, state )
 
 x = state.var;
 
-for ii = 1 : length(pg.fList)
-    x = pg.fList{ii}.prox([], x);
+for ii = 1 : length(pocs.fList)
+    x = pocs.fList{ii}.prox(1, x);
 end
 
 state.var = x;

@@ -24,6 +24,7 @@ classdef Functional < Operator
         varargout = grad(fun, varargin)
         z = proxConj(fun, lambda, x)
         p = isProx(op)
+        setProxOption(fun, varargin)
     end
     
     methods(Access = protected)

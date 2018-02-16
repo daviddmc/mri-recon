@@ -2,7 +2,9 @@ function checkFun(pocs)
 
 
 for ii = length(pocs.fList)
-    if ~isa(pocs.fList{ii}, 'Indicator') || ~pocs.fList{ii}.isProx
+    if ~pocs.fList{ii}.isProx
+        error(' ');
+    elseif length(pocs.fList{ii}.varList) ~= 1
         error(' ');
     end
 end

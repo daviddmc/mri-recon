@@ -1,4 +1,4 @@
-%% DEMO Compressed Sensing MRI
+%% DEMO Compressed Sensing MRI 1
 %
 % This example solves the following problem:
 %   
@@ -16,7 +16,7 @@
 % See also FourierTransformation, Undersampling, WaveletTransformation, 
 % SumSquaredDifference, TotalVariation, L1Norm, PG
 
-% Copyright 2017 Junshen Xu
+% Copyright 2018 Junshen Xu
 
 clear all
 close all
@@ -52,6 +52,7 @@ param.stopCriteria = 'MAX_ITERATION';
 pg = PG(ssd, R);
 x0 = ft.adjoint(kdata ./ pdf_vardens);
 
+%% run solver
 [x, info] = pg.run(x0, param);
 
 %% show result

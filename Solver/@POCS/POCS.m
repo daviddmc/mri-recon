@@ -5,6 +5,7 @@ classdef POCS < Solver
     
     properties(SetAccess = protected)
         fList
+        costList
     end
     
     methods
