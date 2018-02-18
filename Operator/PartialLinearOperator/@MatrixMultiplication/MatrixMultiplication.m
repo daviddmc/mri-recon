@@ -11,12 +11,6 @@ classdef MatrixMultiplication < PartialLinearOperator
             isLinear = inputList{1}.isConstant || inputList{2}.isConstant;
             linOp = linOp@PartialLinearOperator(isLinear, [], inputList);
         end
-        
-        a = AtA(op);
-        t = typeAtA(op);
-        
-
-        %varargout = gradOp_(op, varargin)   
     end
     
     methods(Access = protected)
@@ -25,7 +19,8 @@ classdef MatrixMultiplication < PartialLinearOperator
         end
         [gA, gB] = gradOp_(op, preGrad);
         y = apply_(op, a, b, isCache);
-        y = JacOp_(op, x);
+        a = AtA_(op, a);
+        t = typeAtA_(op, t);
     end
 
 end

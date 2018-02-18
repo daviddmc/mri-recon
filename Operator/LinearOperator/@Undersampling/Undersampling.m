@@ -21,14 +21,13 @@ classdef Undersampling < LinearOperator
             end
             
         end
-        
-        a = AtA(op);
-        t = typeAtA(op);
     end
     
     methods(Access = protected)
         y = apply_(m, x, isCahce)
         y = pinv_(m, x);
+        a = AtA_(op, a);
+        t = typeAtA_(op, t);
     end
     
 end

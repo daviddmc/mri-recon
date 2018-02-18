@@ -17,6 +17,8 @@ classdef FourierTransformation < LinearOperator
     methods(Access = protected)
         y = apply_(ft, x, isCache);
         y = pinv_(ft, x);
+        t = typeAtA_(ft, t)
+        a = AtA_(ft, a);
     end
         
 end

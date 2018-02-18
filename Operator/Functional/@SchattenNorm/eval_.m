@@ -11,7 +11,11 @@ else
 end
     
 if nargout > 0
-    y = sum(s(:));
+    if nuc.p ~= 1
+        y = sum(s(:).^nuc.p) / nuc.p;
+    else
+        y = sum(s(:));
+    end
 end
 
 end

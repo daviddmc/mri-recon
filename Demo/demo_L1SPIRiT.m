@@ -2,12 +2,12 @@
 %
 % The L1-SPIRiT problem can be formularized as
 %
-% (P1)   argmin 1/2 * ||Gx - x||^2 + mu * ||Wx||_1
+% (P1)   argmin 1/2 * ||Gx - x||^2 + mu * ||Wx||_1,2
 %        subject to P(x) = y
 %
 % or
 %
-% (P2)   argmin mu * ||Wx||_1
+% (P2)   argmin mu * ||Wx||_1,2
 %        subject to P(x) = y
 %                   Gx = x
 %

@@ -57,7 +57,7 @@ param.tol = 0.0025;
 param.stopCriteria = 'PRIMAL_UPDATE';
 x0 = E.adjoint(kdata);
 x0(:,:,:,2) = 0;
-[x, info] = pg.run(x0, param);
+x = pg.run(x0, param);
 
 %% show results
 L = x(:,:,:,1);

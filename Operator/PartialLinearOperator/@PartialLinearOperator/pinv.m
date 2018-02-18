@@ -1,9 +1,6 @@
 function y = pinv(op, x)
 
-if ~op.isPreConstant
-    op.preConstant()
-end
-
+op.preConstant();
 
 %cacheOutput = cell(1, len);
 

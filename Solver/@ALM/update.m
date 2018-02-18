@@ -2,12 +2,28 @@ function state = update( alm, state )
 
 len = length(state.var);
 for ii = 1 : len
-    if alm.typeList(ii) == 1 %prox
-        state.var{ii} = alm.varfList{ii}.prox(1/state.mu(alm.varEqList{ii}), alm.sumPrimal{ii}.apply(), alm.HList{ii});
-    elseif alm.typeList(ii) == 2
-        state.var{ii} = subSSD(alm.AList{ii}, alm.bList{ii}, [alm.varfList{ii}.mu, state.mu(alm.varEqList{ii})], alm.typeAtAList(ii), alm.FList{ii});
-    else
-        state.var{ii} = subSSD(alm.AList{ii}, alm.bList{ii}, state.mu(alm.varEqList{ii}), alm.typeAtAList(ii), alm.FList{ii});
+    
+    switch alm.typeList(ii)
+        case 1
+            state.var{ii} = alm.varfList{ii}.prox(1/state.mu(alm.varEqList{ii}), alm.sumPrimal{ii}.apply(), alm.HList{ii});
+        case 2
+            state.var{ii} = subSSD(alm.AList{ii}, alm.bList{ii}, [alm.varfList{ii}.mu, state.mu(alm.varEqList{ii})], alm.typeAtAList(ii), alm.FList{ii});
+        case 0
+            state.var{ii} = subSSD(alm.AList{ii}, alm.bList{ii}, state.mu(alm.varEqList{ii}), alm.typeAtAList(ii), alm.FList{ii});
+        case {-3, -1}
+            for jj = 1 : length(alm.bList{ii})
+                bList{jj} = alm.bList{jj}.apply();
+            end
+            param.verbose = 0;
+            param.maxIter = 10;
+            if alm.typeList(ii) == -1
+                lq = LSQR(alm.AList{ii}, bList, sqrt([alm.varfList{ii}.mu, state.mu(alm.varEqList{ii})]));
+            else
+                lq = LSQR(alm.AList{ii}, bList, sqrt(state.mu(alm.varEqList{ii})));
+            end
+            state.var{ii} = lq.run(state.var{ii}, param);
+        otherwise
+            error(' ');
     end
     alm.varList{ii}.setVar(state.var{ii});
     if ii < len

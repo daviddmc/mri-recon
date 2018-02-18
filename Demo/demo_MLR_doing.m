@@ -1,17 +1,31 @@
-%% Multi-scale Low Rank Matrix Decomposition on Hanning Matrices
+%% DEMO Multi-scale Low Rank Matrix Decomposition
 %
-% (c) Frank Ong 2015
+% This example solves the following matrix decomposition problem:
+%   
+%   argmin sum_i(lambda_i * ||x_i||_block_nuc)
+%   subject to sum_i(x_i) = y
 %
-clc
+% where y is the original matrix, x_i blockwise low-rank components at 
+% different scales, lambda_i are the weights for different scales.
+%
+% This problem can be by ADMM.
+%
+% See also BlockNuclearNorm, LinearEquation, SeparableSum, ADMM
+%
+% Reference:
+% [1]Ong, F., & Lustig, M. (2016). Beyond low rank + sparse: multi-scale 
+% low rank matrix decomposition. IEEE Journal of Selected Topics in Signal 
+% Processing, 10(4), 672-687.
+%   
+% Copyright 2018 Junshen Xu
+
 clear all
 close all
-%setPath
 
 %% Set Parameters
 N = 64; % Matrix length
 L = log2(N);  % Number of levels
 FOV = [N,N]; % Matrix Size
-sigma = 0; % noise-less
 
 nIter = 50; % Number of iterations
 
@@ -67,29 +81,13 @@ DC = LinearEquation({S, X});
 
 param.maxIter = nIter; 
 param.verbose = 2;
-param.rho0 = 10;
 param.tol = 1e-3;
-
-%fbpd = FBPD(DC, sumBlockNuclearNorms, [], []);
-%[X_it, info] = fbpd.run(zeros(FOVl), param);
-
-%eq1.lhs = {'1'};
-%eq1.rhs = {'2'};
-%alm = ALM({DC, sumBlockNuclearNorms}, {eq1});
-%param.mu = 10;
-%param.beta = 1;
-%param.stopCriteria = 'MAX_ITERATION';
-%[X_it, info] = alm.run({zeros(FOVl), zeros(FOVl)}, param);
-%X_it = X_it{1};
-
 param.updateInterval = 3;
-param.tau = 50;
+param.tau = 1;
 param.gamma = 1.5;
-%admm = ADMM(DC, [], sumBlockNuclearNorms);
 admm = ADMM(sumBlockNuclearNorms, [] ,DC);
-[X_it, info] = admm.run(zeros(FOVl), param);
+X_it = admm.run(zeros(FOVl), param);
 
-%[X_it, info ] = ADMM(DC, sumBlockNuclearNorms, [], zeros(FOVl), param );
 %% Show Result
 
 figure,imshow3(abs(X_it),[],[1,levels]),title('Multi-scale Low Rank Decomposition','FontSize',14);

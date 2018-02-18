@@ -195,21 +195,61 @@ typeAtAList = zeros(1 ,len);
 FList = cell(1, len);
 for ii = 1 : len
     if typeList(ii) == 0 || typeList(ii) == 2
-        typeAtA = zeros(1, length(AList{ii}));
+        %typeAtA = zeros(1, length(AList{ii}));
         for jj = 1 : length(AList{ii})
-            typeAtA(jj) = AList{ii}{jj}.typeAtA;
+            typeAtA{jj} = AList{ii}{jj}.typeAtA;
         end
-        typeAtA = unique(typeAtA);
-        if ismember(typeAtA, [1,2])
+        typeata = unique(cellfun(@(x)x.type, typeAtA));
+        if ismember(typeata, [1,2])
             typeAtAList(ii) = 1;
-        elseif ismember(typeAtA, [1,3])
+        elseif ismember(typeata, [1,3])
             typeAtAList(ii) = 2;
-            FList{ii} = FourierTransformation("ALM_F",0, [1,2]); %TODO
-        elseif ismember(typeAtA, [1,2,4])
+            adj = 0;         
+            for jj = 1 : length(AList{ii})
+                if typeAtA{jj}.type == 3
+                    if adj * typeAtA{jj}.F < 0
+                        typeList(ii) = typeList(ii) - 3;
+                    else
+                        adj = adj + typeAtA{jj}.F;
+                    end
+                end
+            end
+            dimF = typeAtA{1}.dimF;
+            dimN = typeAtA{1}.dimN;
+            
+            for jj = 2 : length(AList{ii})
+                if typeAtA{jj}.type == 3
+                    for kk = 1 : length(typeAtA{jj}.dimF)
+                        if ~ismember(typeAtA{jj}.dimF(kk), dimF)
+                            if isempty(dimN) || ismember(typeAtA{jj}.dimF(kk), dimN)
+                                typeList(ii) = typeList(ii) - 3;
+                            else
+                                dimF = sort([dimF typeAtA{jj}.dimF(kk)]);
+                            end
+                        end
+                    end
+                    for kk = 1 : length(dimF)
+                        if ~ismember(dimF(kk), typeAtA{jj}.dimF)
+                            if isempty(typeAtA{jj}.dimN) || ismember(dimF(kk), typeAtA{jj}.dimN)
+                                typeList(ii) = typeList(ii) - 3;
+                            end
+                        end
+                    end
+                    dimN = unique([dimN, typeAtA{jj}.dimN]);
+                end
+            end
+            
+            if typeList(ii) >= 0
+                FList{ii} = FourierTransformation("ALM_F",adj < 0, dimF);
+            end
+        elseif ismember(typeata, [1,2,4])
             typeAtAList(ii) = 3;
         else
-            error(' ');
+            typeList(ii) = typeList(ii) - 3;
         end
+        %if typeList(ii) < 0
+        %    
+        %end
     end
 end
 

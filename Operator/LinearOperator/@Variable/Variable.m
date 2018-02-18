@@ -27,6 +27,8 @@ classdef Variable < LinearOperator
         y = apply_(op, varargin)
         y = gradOp_(op, preGrad)
         y = pinv_(op, x)
+        t = typeAtA_(op, t);
+        a = AtA_(op, a);
     end
     
     methods(Static)

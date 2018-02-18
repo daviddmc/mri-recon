@@ -17,6 +17,10 @@ classdef LSQR < Solver
             lq.bList = bList;
             lq.lambdas = lambdas;
         end
+        
+        function setb(lq, bList)
+            lq.bList = bList;
+        end
     end
     
     methods(Access = protected)

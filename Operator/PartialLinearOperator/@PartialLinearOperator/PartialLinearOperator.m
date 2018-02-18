@@ -21,12 +21,14 @@ classdef PartialLinearOperator < Operator
         u = unitary(op)
         s = shape(op)
         
-        t = typeAtA(op);
+        t = typeAtA(op, t);
         a = AtA(op);
             
     end
     
     methods(Access = protected)
+        t = typeAtA_(op, t)
+        a = AtA_(op, a);
         updateProp(linOp, isLinear, linProp);
         function y = pinv_(op, x)
             error(' ');

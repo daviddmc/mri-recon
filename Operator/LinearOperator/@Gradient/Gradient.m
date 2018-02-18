@@ -3,6 +3,8 @@ classdef Gradient < LinearOperator
     properties
         dim
         weight
+        sizeX
+        AtAeig
     end
     
     methods
@@ -28,5 +30,7 @@ classdef Gradient < LinearOperator
     
     methods(Access = protected)
         y = apply_(g, x, isCache)
+        t = typeAtA_(op, t)
+        a = AtA_(op, a);
     end
 end

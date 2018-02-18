@@ -38,6 +38,8 @@ if nargout > 0
         end
 
         y = sum(x, dimX + 1);
+        
+        g.sizeX = size(y);
     else
         
         dim = g.dim;

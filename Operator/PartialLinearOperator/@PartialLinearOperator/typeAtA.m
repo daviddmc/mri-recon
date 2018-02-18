@@ -1,16 +1,25 @@
-function type = typeAtA( op )
+function t = typeAtA( op, t)
 
-if op.unitary && op.shape <= 0
-    type = 1;
-elseif op.unitary_ && op.isLinear
+% 0 : no AtA
+% 1 : const
+% 2 : diagonal
+% 3 : F
+% 4 : MtM
+
+if nargin == 1
+    t.type = 1;
+end
+
+if op.isLinear
     for ii = 1 : length(op.inputList)
         if ~op.inputList{ii}.isConstant
-            type = op.inputList{ii}.typeAtA;
+            t = op.typeAtA_(t);
+            t = op.inputList{ii}.typeAtA(t);
             break
         end
     end
 else
-    type = 0;
+    t.type = 0;
 end
 
 end
