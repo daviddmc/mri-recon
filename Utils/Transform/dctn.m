@@ -1,11 +1,21 @@
-function a = DCT(a, ndim)
+function a = dctn(a, ndim)
+%DCTN   Discrete cosine transform for N-D arrays
+%   DCTN(X) is the N dimensional discrete cosine transform (type 2) of the 
+%   N-D array X. The results is normalized so that DCTN is an unitary 
+%   operator.
+%
+%   DCTN(X, NDIM) performs dct along the first NDIM dimension of X.
+
+%   This code is modified from Andriy Myronenko's Medical Image 
+%   Registration Toolbox (MIRT) for Matlab (version 1.0), 
+%   https://sites.google.com/site/myronenko/
+
+%   Copyright 2018 Junshen Xu
 
 persistent siz ww ind isreala na;
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Check input 
-if (nargin == 0) || isempty(a) ,
+% Check input 
+if (nargin == 0) || isempty(a)
     error('Insufficient input');
 end
 
@@ -14,18 +24,16 @@ if nargin < 2
     ndim = ndimFull;
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Check for the row vector
+% Check for the row vector
 transpose=0;
 if (ndimFull == 2) && (size(a,1)==1)
     transpose=1; a=a';
 end
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Check if the variable size has changed and we need to
-%%% precompute weights and indicies
 
+% Check if the variable size has changed and we need to
+% precompute weights and indicies
 precompute=0;
 sizeTrans = size(a);
 sizeTrans = sizeTrans(1:ndim);
@@ -40,10 +48,8 @@ elseif isreala ~= isreal(a)
 elseif na ~= numel(a)
     precompute=1;
 end
-    
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Precompute weights and indicies
+% Precompute weights and indicies
 if precompute
     siz=sizeTrans;
     isreala = isreal(a);
@@ -62,11 +68,8 @@ if precompute
     
 end
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Actual multidimensional DCT. Handle 1D and 2D cases
-%%% separately, because .' is much faster than shiftdim.
-
+% Actual multidimensional DCT. Handle 1D and 2D cases
+% separately, because .' is much faster than shiftdim.
 % check for 1D or 2D cases
 if ndimFull == 2
     if min(siz) == 1 && (ndim == 1)
@@ -98,7 +101,12 @@ function a=dct(a,ww,ind)
 %DCT  Discrete cosine transform 1D (operates along first dimension)
 
 isreala=isreal(a);
-k=1; if ~isreala, ia = imag(a); a = real(a); k=2; end; % check if complex
+k=1; 
+if ~isreala 
+    ia = imag(a); 
+    a = real(a); 
+    k=2; 
+end % check if complex
     
 % k=1 (if 'a' is real) and 2 (if 'a' is complex)
 for i=1:k

@@ -12,6 +12,12 @@ else
     solver.param.plotFun = param.plotFun;
 end
 
+if ~isfield(param, 'plotInterval')
+    solver.param.plotInterval = 1;
+else
+    solver.param.plotInterval = param.plotInterval;
+end
+
 if ~isfield(param, 'verbose')
     solver.param.verbose = 1;
 else

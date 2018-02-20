@@ -22,6 +22,8 @@ classdef Reshape < LinearOperator
     methods(Access = protected)
         y = apply_(rs, x, isCache)
         y = pinv_(rs, x)
+        a = AtA_(op, a);
+        t = typeAtA_(op, t);
     end
     
 end

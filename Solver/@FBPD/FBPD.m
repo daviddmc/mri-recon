@@ -1,4 +1,11 @@
 classdef FBPD < Solver
+% Reference:
+% [1]Combettes, P. L., Condat, L., Pesquet, J. C., & V?, B. C. (2014). A 
+% forward-backward view of some primal-dual optimization methods in image 
+% recovery. IEEE International Conference on Image Processing 
+% (pp.4141-4145). IEEE.
+% [2]Goldstein, T., Li, M., Yuan, X., Esser, E., & Baraniuk, R. (2015). 
+% Adaptive primal-dual hybrid gradient methods for saddle-point problems.
     
     properties(Access = private)
         costf = []

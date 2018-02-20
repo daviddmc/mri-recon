@@ -1,11 +1,21 @@
-function a = IDCT(a, ndim)
+function a = idctn(a, ndim)
+%IDCTN   Inverse discrete cosine transform for N-D arrays
+%   IDCTN(X) is the N dimensional inverse discrete cosine transform 
+%   (type 2) of the N-D array X. The results is normalized so that IDCTN is 
+%   an unitary operator.
+%
+%   IDCTN(X, NDIM) performs idct along the first NDIM dimension of X.
+
+%   This code is modified from Andriy Myronenko's Medical Image 
+%   Registration Toolbox (MIRT) for Matlab (version 1.0), 
+%   https://sites.google.com/site/myronenko/
+
+%   Copyright 2018 Junshen Xu
 
 persistent siz ww ind isreala;
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Check input 
-if (nargin == 0) || isempty(a) ,
+if (nargin == 0) || isempty(a)
     error('Insufficient input');
 end
 
@@ -14,17 +24,14 @@ if nargin < 2
     ndim = ndimFull;
 end
     
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Check for the row vector
+% Check for the row vector
 transpose=0;
 if (ndimFull==2) && (size(a,1)==1)
     transpose=1; a=a';
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Check if the variable size has changed and we need to
-%%% precompute weights and indicies
-
+% Check if the variable size has changed and we need to
+% precompute weights and indicies
 precompute=0;
 sizeTrans = size(a);
 sizeTrans = sizeTrans(1:ndim);
@@ -38,9 +45,7 @@ elseif isreala~=isreal(a)
     precompute=1;
 end
     
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Precompute weights and indicies
+% Precompute weights and indicies
 if precompute
     siz=sizeTrans;
     isreala = isreal(a);
@@ -54,17 +59,15 @@ if precompute
         tmp(1:2:n)=(1:ceil(n/2)); 
         tmp(2:2:n)=(n:-1:ceil(n/2)+1);
         ind{i}=bsxfun(@plus, tmp', 0:n:n*(numel(a)/n-1));
-        if (siz(i)==1), break; end;
+        if (siz(i)==1)
+            break; 
+        end
     end
     
 end
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Actual multidimensional DCT. Handle 1D and 2D cases
-%%% separately, because .' is much faster than shiftdim.
-
+% Actual multidimensional DCT. Handle 1D and 2D cases
+% separately, because .' is much faster than shiftdim.
 % check for 1D or 2D cases
 if ndimFull == 2
     if (min(siz)==1) && ndim == 1
@@ -96,7 +99,11 @@ function a = idct(a,ww,ind)
 %DCT  Inverse Discrete cosine transform 1D (operates along first dimension)
 
 isreala=isreal(a);k=1;
-if ~isreala, ia = imag(a); a = real(a); k=2; end;
+if ~isreala
+    ia = imag(a); 
+    a = real(a); 
+    k=2; 
+end
 
 % k=1 if a is real and 2 if a is complex
 for i=1:k
@@ -106,9 +113,14 @@ for i=1:k
     a=real(a(ind));              % reorder using idicies
     
     % check if the data is not real
-    if ~isreala,
-        if i==1, ra = a; a = ia; clear ia;  % proceed to imaginary part
-        else a = complex(ra,a); end;        % finalize the output
+    if ~isreala
+        if i==1
+            ra = a; 
+            a = ia; 
+            clear ia;  % proceed to imaginary part
+        else
+            a = complex(ra,a); 
+        end        % finalize the output
     end
     
 end

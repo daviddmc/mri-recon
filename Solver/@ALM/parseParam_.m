@@ -26,3 +26,23 @@ else
     alm.param.beta = param.beta;
 end
 
+if length(alm.param.beta) ~= length(alm.eqList)
+    if length(alm.param.beta) == 1
+        alm.param.beta = alm.param.beta * ones(1, length(alm.eqList));
+    else
+        error(' ');
+    end
+end
+
+if ~isfield(param, 'paramCG')
+    alm.param.paramCG = [];
+else
+    alm.param.paramCG = param.paramCG;
+end
+
+if ~isfield(param, 'updateInterval')
+    alm.param.updateInterval = 1;
+else
+    alm.param.updateInterval = param.updateInterval;
+end
+

@@ -9,7 +9,10 @@ classdef L2Ball < Indicator
             ball = ball@Indicator(inputList);
             ball.r = r;
         end
+    end
         
+    
+    methods(Access = protected)
         z = prox_(ball, lambda, x)
     end
     

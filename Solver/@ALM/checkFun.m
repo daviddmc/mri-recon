@@ -66,7 +66,7 @@ for ii = 1 : length(alm.eqList)
                     varList = [varList(1 : kk - 1), vs(ll), varList(kk : end)];
                     varfList = [varfList(1 : kk - 1), {[]}, varfList(kk : end)];
                     varEqList = [varEqList(1 : kk - 1), {ii}, varEqList(kk : end)];
-                    varEqPosList = [varPosEqList(1 : kk - 1), {-jj}, varEqPosList(kk : end)];
+                    varEqPosList = [varEqPosList(1 : kk - 1), {-jj}, varEqPosList(kk : end)];
                     flag = 1;
                     break;
                 elseif vs{ll}.name == varList{kk}.name

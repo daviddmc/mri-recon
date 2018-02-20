@@ -12,16 +12,14 @@ for ii = 1 : len
             state.var{ii} = subSSD(alm.AList{ii}, alm.bList{ii}, state.mu(alm.varEqList{ii}), alm.typeAtAList(ii), alm.FList{ii});
         case {-3, -1}
             for jj = 1 : length(alm.bList{ii})
-                bList{jj} = alm.bList{jj}.apply();
+                bList{jj} = alm.bList{ii}{jj}.apply();
             end
-            param.verbose = 0;
-            param.maxIter = 10;
             if alm.typeList(ii) == -1
                 lq = LSQR(alm.AList{ii}, bList, sqrt([alm.varfList{ii}.mu, state.mu(alm.varEqList{ii})]));
             else
                 lq = LSQR(alm.AList{ii}, bList, sqrt(state.mu(alm.varEqList{ii})));
             end
-            state.var{ii} = lq.run(state.var{ii}, param);
+            state.var{ii} = lq.run(state.var{ii}, alm.param.paramCG);
         otherwise
             error(' ');
     end
@@ -38,7 +36,12 @@ end
 
 alm.varList{1}.setVar();
 
-state.mu = state.mu * state.beta;
+if mod(state.iter, alm.param.updateInterval) == 0
+    for ii = 1 : length(state.varDual)
+        state.mu(ii) = state.mu(ii) * state.beta(ii);
+        state.varDual{ii} = state.varDual{ii} / state.beta(ii);
+    end
+end
 
 end
 

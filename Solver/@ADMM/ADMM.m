@@ -1,5 +1,12 @@
 classdef ADMM < Solver
     
+% Reference:
+% [1]Xu, Z., Figueiredo, M. A. T., Yuan, X., Studer, C., & Goldstein, T. 
+% (2017). Adaptive Relaxed ADMM: Convergence Theory and Practical 
+% Implementation. IEEE Conference on Computer Vision and Pattern 
+% Recognition (pp.7234-7243). IEEE Computer Society.
+
+    
     properties(Access = private)
         costf = []
         costg = []

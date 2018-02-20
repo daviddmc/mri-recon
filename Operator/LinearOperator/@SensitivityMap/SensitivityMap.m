@@ -2,6 +2,7 @@ classdef SensitivityMap < LinearOperator
     
     properties
         map
+        ata
     end
     
     methods
@@ -21,6 +22,8 @@ classdef SensitivityMap < LinearOperator
     methods(Access = protected)
         y = apply_(sm, x, isCache)
         y = pinv_(sm, x)
+        a = AtA_(op, a);
+        t = typeAtA_(op, t);
     end
 end
             

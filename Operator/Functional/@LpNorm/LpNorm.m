@@ -3,11 +3,13 @@ classdef LpNorm < Functional
     % f(x) = sum(|x_i| ^ p) / p
     
     properties
+        p
     end
     
     methods
-        function normp = LpNorm(inputList, mu)
+        function normp = LpNorm(inputList, mu, p)
             normp = normp@Functional(1, 1, 0, mu, inputList);
+            normp.p = p;
         end
     end
     

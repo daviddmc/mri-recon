@@ -1,4 +1,4 @@
-%% DEMO kt SLR
+%% DEMO kt SLR 1
 %
 % This example reconstructd dynamic MRI exploiting sparsity and low-rank 
 % structure. The problem is 

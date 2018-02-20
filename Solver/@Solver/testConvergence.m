@@ -36,7 +36,7 @@ switch solver.param.stopCriteria
             isStop = 1;
         end
         convergenceInfo = {'primal update', primalUpdateNorm, 'primal update rel', primalUpdateNorm / primalNorm, ...
-            'dual update', dualUpdateNorm, 'dual supdate rel', dualUpdateNorm / dualNorm};
+            'dual update', dualUpdateNorm, 'dual update rel', dualUpdateNorm / dualNorm};
     case 'RESIDUAL'
         [isStop, convergenceInfo] = solver.testConvergenceResidual( state );
     case 'GRAD'

@@ -10,7 +10,7 @@ if nargin == 1
     t.type = 1;
 end
 
-if op.isLinear
+if isa(op, 'PartialLinearOperator')
     for ii = 1 : length(op.inputList)
         if ~op.inputList{ii}.isConstant
             t = op.typeAtA_(t);

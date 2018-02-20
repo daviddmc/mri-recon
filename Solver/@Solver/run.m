@@ -64,8 +64,9 @@ for iter = 1 : param.maxIter
     end
     
     if ~isempty(param.plotFun) && ...
-            (~mode(iter, param.plotInterval) || iter == param.maxIter || isStop) 
-        op.param.plotFun(state);
+            (~mod(iter, param.plotInterval) || iter == param.maxIter || isStop) 
+        solver.param.plotFun(state);
+        drawnow;
     end
     
     if solver.saveInfo

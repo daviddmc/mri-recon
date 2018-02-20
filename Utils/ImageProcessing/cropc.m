@@ -1,4 +1,8 @@
-function y = cropCenter(x, cropSize)
+function y = cropc(x, cropSize)
+%CROPC   crop the center of an array
+%   Y = CROPC(X, SIZ) crops the center of X of size SIZ.
+
+%   Copyright 2018 Junshen Xu
 
 sizeFull = size(x);
 sizeFull = sizeFull(1 : length(cropSize));
