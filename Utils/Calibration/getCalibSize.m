@@ -26,7 +26,7 @@ yflag = 0;
 while 1
 	
 	if xflag == 0 
-		tmp = cropCenter(mask,[sx+1,sy]);
+		tmp = cropc(mask,[sx+1,sy]);
 		if sum(tmp(:)) == length(tmp(:))
 			sx = sx + 1;
 		else
@@ -35,7 +35,7 @@ while 1
 	end
 
 	if yflag == 0 
-		tmp = cropCenter(mask,[sx,sy+1]);
+		tmp = cropc(mask,[sx,sy+1]);
 		if sum(tmp(:)) == length(tmp(:))
 			sy = sy + 1;
 		else
@@ -62,7 +62,7 @@ calibSize = [sx,sy];
 [x,y] = meshgrid(linspace(-1,1,size(mask,2)), linspace(-1,1,size(mask,1)));
 r = sqrt(x.^2+ y.^2);
 circMask = r<=1;
-calibMask =  padCenter(ones(calibSize), size(mask));
+calibMask =  zpadc(ones(calibSize), size(mask));
 
 circMask = circMask - calibMask;
 R = sum(circMask(:).*mask(:))/sum(circMask(:));

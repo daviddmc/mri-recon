@@ -5,6 +5,8 @@ function a = dctn(a, ndim)
 %   operator.
 %
 %   DCTN(X, NDIM) performs dct along the first NDIM dimension of X.
+%
+%   See also idctn
 
 %   This code is modified from Andriy Myronenko's Medical Image 
 %   Registration Toolbox (MIRT) for Matlab (version 1.0), 

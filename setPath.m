@@ -1,7 +1,8 @@
-addpath(genpath('Solver'));
-addpath(genpath('Operator'));
-addpath(genpath('Demo'));
+addpath(genpath('Solvers'));
+addpath(genpath('Operators'));
+addpath(genpath('Demos'));
 addpath(genpath('Data'));
 addpath(genpath('Utils'));
-addpath(genpath('Algorithm'));
+addpath(genpath('Algorithms'));
 addpath(genpath('3rdparty'));
+addpath(genpath('Base'));
