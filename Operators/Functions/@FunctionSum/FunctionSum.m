@@ -35,7 +35,7 @@ classdef FunctionSum < Functional
             [topoSort, refList, varList, clearIdx] = getTopoList@Operator(op);
             if flag
                 for ii = 1 : length(topoSort)
-                    if topoSort{ii}.isLinear
+                    if topoSort{ii}.isLinear || topoSort{ii}.isConstant
                         op.idxLinear = [op.idxLinear, ii];
                     else
                         op.idxNonLinear = [op.idxNonLinear, ii];

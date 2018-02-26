@@ -1,9 +1,13 @@
 classdef SensitivityMap < LinearOperator
     
     properties(SetAccess = protected)
-        map
+        map_
         ata
         isNormalized
+    end
+    
+    properties(Dependent)
+        map
     end
     
     methods
@@ -11,23 +15,32 @@ classdef SensitivityMap < LinearOperator
 
             sm = sm@LinearOperator(inputList, isAdjoint);
             % Should the map be normalized???
-            if isNormalized
-                sm.map = map ./ sqrt(sum(abs(map).^2, ndims(map)));
-            else
-                sm.map = map;
-            end
             sm.isNormalized = isNormalized;
+            sm.map = map;
+            %if isNormalized
+            %    sm.map_ = map ./ sqrt(sum(abs(map).^2, ndims(map)));
+            %else
+            %    sm.map_ = map;
+            %end
+            %sm.isNormalized = isNormalized;
         end
         
-        function setMap(sm, map)
+        function m = get.map(sm)
+            m = sm.map_;
+        end
+        function set.map(sm, map)
             if sm.isNormalized
-                sm.map = map ./ sqrt(sum(abs(map).^2, ndims(map)));
+                sm.map_ = map ./ sqrt(sum(abs(map).^2, ndims(map)));
             else
-                sm.map = map;
-                %if isfield(sm.props, 'L') && ~isempty(sm.props.L)
-                %    sm.props.L = [];
-                %    sm.broadcast({'L'}, 0);
-                %end 
+                sm.map_ = map;
+                if isfield(sm.props, 'L') && ~isempty(sm.props.L)
+                    sm.props.L = [];
+                    sm.broadcast({'L'}, 0);
+                end 
+                if isfield(sm.props, 'isConstant') && sm.props.isConstant
+                    sm.props.isConstant = [];
+                    sm.broadcast({'isConstant'}, 0);
+                end
             end
         end
         

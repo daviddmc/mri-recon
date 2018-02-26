@@ -12,12 +12,16 @@ classdef Weighting < LinearOperator
          
         end
         
-        function setWeight(op, w)
+        function set.w(op, w)
             op.w = w;
-            %if isfield(op.props, 'L') && ~isempty(op.props.L)
-            %    sm.props.L = [];
-            %    sm.broadcast({'L'}, 0);
-            %end 
+            if isfield(op.props, 'L') && ~isempty(op.props.L)
+                op.props.L = [];
+                op.broadcast({'L'}, 0);
+            end 
+            if isfield(op.props, 'isConstant') && op.props.isConstant
+                op.props.isConstant = [];
+                op.broadcast({'isConstant'}, 0);
+            end
         end
     end
     

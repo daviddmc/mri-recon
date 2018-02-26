@@ -1,16 +1,15 @@
-classdef MotionDeformation < PartialLinearOperator
+classdef MotionDeformation2D < PartialLinearOperator
     
     properties(SetAccess = protected)
-        interpType
-        isAbs
+        %isAbs
+        %interpType
     end
     
     methods
         % constructor
-        function D = MotionDeformation(inputList, interpType, isAbs)
+        function D = MotionDeformation2D(inputList)
             D = D@PartialLinearOperator(inputList, 2);
-            D.interpType = interpType;
-            D.isAbs = isAbs;
+            %D.isAbs = isAbs;
         end
     end
     

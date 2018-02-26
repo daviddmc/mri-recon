@@ -41,6 +41,10 @@ end
 cacheOutput{len} = y;
 
 for ii = len : -1 : 1
+    
+    if topoSort{ii}.isConstant
+        continue;
+    end
    
     idx = refList{ii};
     lenIdx = length(idx);
@@ -57,14 +61,14 @@ for ii = len : -1 : 1
         cacheOutput{ii} = [];
         topoSort{ii}.cache = [];
     else
-        if ~topoSort{ii}.isConstant
-            for jj = 1 : lv
-                if varList{jj} == topoSort{ii}
-                    topoSort{ii}.cache = cacheOutput{ii};
-                    break;
-                end
+        
+        for jj = 1 : lv
+            if varList{jj} == topoSort{ii}
+                topoSort{ii}.cache = cacheOutput{ii};
+                break;
             end
         end
+        
     end
 end
 
