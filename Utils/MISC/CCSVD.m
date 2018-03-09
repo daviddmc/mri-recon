@@ -11,6 +11,9 @@ function [data, nc] = CCSVD( data, tol, cdim)
 %   [Y, N] = CCSVD(X,...) also returns the number of virtual coils of Y, 
 %   i.e. N = ndims(Y, DIM).
 
+%   This code is modified from Michael Lustig's SPIRiT V0.3 library
+%   https://people.eecs.berkeley.edu/~mlustig/Software.html
+
 %   Copyright 2018 Junshen Xu
 
 ndim = ndims(data);
