@@ -20,7 +20,7 @@ function p = isConstant(op)
             end
             op.cache = op.apply_(inputs{:}, 0);
         else
-            op.cache = [];
+            %op.cache = [];
         end
 
     end

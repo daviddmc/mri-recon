@@ -28,7 +28,7 @@ close all
 %% set paramters
 mu1 = 0.0005;
 mu2 = 0.001;
-method = 0; % 0 for FBPD and 1 for NLCG
+method = 1; % 0 for FBPD and 1 for NLCG
 
 %% load data
 load brain.mat
