@@ -1,2 +1,2 @@
 # mri-recon
-mri reconstruction toolbox
+mri reconstruction toolbox.
