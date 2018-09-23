@@ -37,7 +37,7 @@ classdef SensitivityMap < LinearOperator
                     sm.props.L = [];
                     sm.broadcast({'L'}, 0);
                 end 
-                if isfield(sm.props, 'isConstant') && sm.props.isConstant
+                if isfield(sm.props, 'isConstant') && ~isempty(sm.props.isConstant)
                     sm.props.isConstant = [];
                     sm.broadcast({'isConstant'}, 0);
                 end
@@ -56,7 +56,11 @@ classdef SensitivityMap < LinearOperator
         function p = shapeNotAdjoint(op)
             p = -1;
         end
-        
+        %%%%%%%%%%%%%
+        function p = L_(op)
+            tmp = sum(abs(op.map).^2, ndims(op.map));
+            p = max(tmp(:));
+        end
     end
 end
             

@@ -67,8 +67,8 @@ for level = 1 : nscale
     
     % if the sublevel is not last prepair for the next level
     if level < nscale
-        x = upsamplingGrid(x, 1);
-        xgrid = upsamplingGrid(xgrid, 1);
+        x = upsamplingGrid2D(x);
+        xgrid = upsamplingGrid2D(xgrid);
         Xgrid.setInput(xgrid);
     end
     

@@ -1,6 +1,6 @@
 classdef Weighting < LinearOperator
     
-    properties(SetAccess = protected)
+    properties
         w
     end
     
@@ -18,7 +18,7 @@ classdef Weighting < LinearOperator
                 op.props.L = [];
                 op.broadcast({'L'}, 0);
             end 
-            if isfield(op.props, 'isConstant') && op.props.isConstant
+            if isfield(op.props, 'isConstant') && ~isempty(op.props.isConstant)
                 op.props.isConstant = [];
                 op.broadcast({'isConstant'}, 0);
             end
@@ -33,7 +33,10 @@ classdef Weighting < LinearOperator
         function p = isPinv_(op)
             p = 1;
         end
-        
+        %%%%%%%%%%%%%%
+        function p = L_(op)
+            p = max(abs(op.w(:)).^2);
+        end
     end
     
 end

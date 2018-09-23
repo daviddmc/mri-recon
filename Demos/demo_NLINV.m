@@ -95,9 +95,9 @@ for iter = 1 : nIterOut
     alpha = alpha / 3.;
     % update sensitivity maps
     cmap = Fw.apply(XN(:,:,2:end));    
-    C.setMap(cmap);
-    C1.setMap(cmap);
-    Rho.setWeight(XN(:,:,1));
+    C.map = cmap;
+    C1.map = cmap;
+    Rho.w = XN(:,:,1);
     % display
     fprintf('iteration %d : niter for CG step = %d, rel residual = %f\n', ...
         iter, info.iter, norm(col(resDC.apply())) / normYS);
