@@ -32,8 +32,8 @@ close all
 
 %% set parameters
 p = 0.1; % parameter for Schatten p norm
-mu1 = 1.5e4; % Schatten p norm
-mu2 = 1.5;
+mu1 = 1.5e4; %3e2; %1.5e4; % Schatten p norm
+mu2 = 1.5; %1e-3; %1.5;
 
 %% load data
 load aperiodic_pincat.mat;
@@ -55,10 +55,10 @@ nucNorm = SchattenNorm([], mu1, p, 2);
 l12norm = L12Norm([], mu2, 3);
 
 %% setup solver
-param.maxIter = 100;
+param.maxIter = 200;
 param.verbose = 2;
 param.stopCriteria = 'PRIMAL_UPDATE';
-param.tol = 1e-3;
+param.tol = 0;
 fbpd = FBPD(nucNorm, l12norm, G, ssd, param);
 
 %% run solver
