@@ -43,14 +43,15 @@ data = cell2mat(DATA_kspace);
 
 %% Create Cartesian to spiral operator
 S = SensitivityMap([], false, sens, false);
-F = FourierTransform(S, false, [1,2,3]);
+F = FourierTransform(S, false, [1,2]);
+IFT = FourierTransform([], true, 3);
 A = Gridding(F, false, N_c, kspace_traj_us);
 G = Gradient([], false, [1,2,3]);
 
 %% cost functions
-ssd = SumSquaredDifference({A, data}, 1);
-mu1 = 1e-4;
-mu2 = 1e-4;
+ssd = SumSquaredDifference({A, data}, 2);
+mu1 = 1e-7;
+mu2 = 1e-5;
 nucNorm = SchattenNorm([], mu1, 0.1, 2);
 l12norm = L12Norm([], mu2, 3);
 
@@ -59,18 +60,18 @@ l12norm = L12Norm([], mu2, 3);
 %FT_cart2spiral = FT_Cart2spiral(kspace_traj_us, oversampling_factor.*N_c);
 
 %% Reconstruction
-param.maxIter = 200;
+param.maxIter = 500;
 param.verbose = 2;
 param.tol = 1e-3;
 param.stopCriteria = 'PRIMAL_UPDATE';
-param.tau = 3e-5;
+param.tau = 3e-5/2;
 solver = FBPD(nucNorm, l12norm, G, ssd, param);
 
 %x0 = A.adjoint(data);
 %x0 = x0 / norm(x0(:)) * norm(x_ground_truth(:)) / 10;
 
 [res, info] = solver.run(zeros(oversampling_factor.*N_c));
-
+res = IFT.apply(res);
 x_recon = res( (oversampling_factor(1)-1)*N_c(1)/2 + 1 : (oversampling_factor(1)+1)*N_c(1)/2,  (oversampling_factor(2)-1)*N_c(2)/2 + 1 : (oversampling_factor(2)+1)*N_c(2)/2, (oversampling_factor(3)-1)*N_c(3)/2 + 1 : (oversampling_factor(3)+1)*N_c(3)/2 );
 x_recon = x_recon(:,:,end:-1:1);
 x_recon = imrotate(x_recon, rotate_data_angle);
