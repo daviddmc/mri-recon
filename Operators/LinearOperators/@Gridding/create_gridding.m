@@ -1,6 +1,6 @@
 function A = create_gridding(m)
 
-k_s = m.traj;
+k_s = m.k_traj;
 N_s = size(k_s);
 N_c = m.im_size;
 
