@@ -39,7 +39,7 @@ if param.verbose
 end
 
 optStart = tic;
-
+isStop = false;
 for iter = 1 : param.maxIter
     
     iterStart = tic;

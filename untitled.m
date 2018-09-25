@@ -27,6 +27,7 @@ N_chan = size(sens,3);
 
 mask_brain = mask_brain_invivo;
 x_ground_truth = invivo_ground_truth_R1_TV0(:,:,end:-1:1);
+fac = max(abs(invivo_ground_truth_R1_TV0(:)));
 
 % Rotate data to have correct orientation
 rotate_data_angle = 270;
@@ -35,23 +36,24 @@ x_ground_truth = imrotate(x_ground_truth, rotate_data_angle);
 x_ground_truth_masked = bsxfun(@times, x_ground_truth, mask_brain);
 
 % sens
+fac2 = max(abs(sens(:)));
 sens = reshape(sens, [size(sens,1), size(sens,2), 1, N_chan]);
-sens = repmat(sens, [1, 1, N_c(3), 1]);
+sens = repmat(sens, [1, 1, N_c(3), 1]) / fac2;
 
 % data
-data = cell2mat(DATA_kspace);
+data = cell2mat(DATA_kspace) / fac;
 
 %% Create Cartesian to spiral operator
 S = SensitivityMap([], false, sens, false);
-F = FourierTransform(S, false, [1,2]);
-IFT = FourierTransform([], true, 3);
+F = FourierTransform(S, false, [1,2,3]);
+%IFT = FourierTransform([], true, 3);
 A = Gridding(F, false, N_c, kspace_traj_us);
 G = Gradient([], false, [1,2,3]);
 
 %% cost functions
-ssd = SumSquaredDifference({A, data}, 2);
-mu1 = 1e-7;
-mu2 = 1e-5;
+ssd = SumSquaredDifference({A, data}, 1);
+mu1 = 1e-4;
+mu2 = 1e-4;
 nucNorm = SchattenNorm([], mu1, 0.1, 2);
 l12norm = L12Norm([], mu2, 3);
 
@@ -62,18 +64,24 @@ l12norm = L12Norm([], mu2, 3);
 %% Reconstruction
 param.maxIter = 500;
 param.verbose = 2;
-param.tol = 1e-3;
+param.tol = 1e-2;
 param.stopCriteria = 'PRIMAL_UPDATE';
-param.tau = 3e-5/2;
+param.tau = 3e-5 * fac2^2;
 solver = FBPD(nucNorm, l12norm, G, ssd, param);
+
+param_lsqr.verbose = 2;
+param_lsqr.maxIter = 60;
+solver_lsqr = LSQR({A}, {data}, 1e-6, param_lsqr);
 
 %x0 = A.adjoint(data);
 %x0 = x0 / norm(x0(:)) * norm(x_ground_truth(:)) / 10;
-
-[res, info] = solver.run(zeros(oversampling_factor.*N_c));
-res = IFT.apply(res);
+%IFT.adjoint(invivo_ground_truth_R1_TV0) *fac2/fac
+%zeros(oversampling_factor.*N_c)
+%[res, info] = solver.run(zeros(oversampling_factor.*N_c));
+[res, info] = solver_lsqr.run(zeros(oversampling_factor.*N_c));
+%res = IFT.apply(res);
 x_recon = res( (oversampling_factor(1)-1)*N_c(1)/2 + 1 : (oversampling_factor(1)+1)*N_c(1)/2,  (oversampling_factor(2)-1)*N_c(2)/2 + 1 : (oversampling_factor(2)+1)*N_c(2)/2, (oversampling_factor(3)-1)*N_c(3)/2 + 1 : (oversampling_factor(3)+1)*N_c(3)/2 );
-x_recon = x_recon(:,:,end:-1:1);
+x_recon = x_recon(:,:,end:-1:1) * fac / fac2;
 x_recon = imrotate(x_recon, rotate_data_angle);
 x_recon_masked = bsxfun(@times, x_recon, mask_brain);
 %{
